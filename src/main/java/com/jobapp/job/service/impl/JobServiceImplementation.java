@@ -37,12 +37,18 @@ public class JobServiceImplementation implements JobService {
     @Override
     public Boolean deleteJob(Long id) {
         try {
-            jobRepository.deleteById(id);
-            return true;
+            Optional<Job> companyOptional = jobRepository.findById(id);
+            if (companyOptional.isPresent()) {
+                jobRepository.deleteById(id);
+                return true; // Deletion successful
+            } else {
+                return false; // Entity with given ID doesn't exist
+            }
         } catch (Exception e) {
-            return false;
+            return false; // Deletion unsuccessful due to exception
         }
     }
+
 
     @Override
     public Boolean updateJob(Long id, Job updatedJob) {
