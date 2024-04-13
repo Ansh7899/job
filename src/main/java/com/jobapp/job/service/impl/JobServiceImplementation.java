@@ -1,5 +1,6 @@
 package com.jobapp.job.service.impl;
 
+import com.jobapp.job.JobApplication;
 import com.jobapp.job.dto.JobWithCompanyDto;
 import com.jobapp.job.external.Company;
 import com.jobapp.job.model.Job;
@@ -11,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class JobServiceImplementation implements JobService {
@@ -26,17 +28,17 @@ public class JobServiceImplementation implements JobService {
     @Override
     public List<JobWithCompanyDto> findAll() {
         List<Job> jobs = jobRepository.findAll();
-        List<JobWithCompanyDto> jobWithCompanyDtos = new ArrayList<>();
+        return jobs.stream().map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    private JobWithCompanyDto convertToDto(Job job){
         RestTemplate restTemplate = new RestTemplate();
-        for (Job job:
-             jobs) {
-            JobWithCompanyDto jobWithCompanyDto = new JobWithCompanyDto();
-            jobWithCompanyDto.setJob(job);
-            Company company = restTemplate.getForObject("http://localhost:8082/company/" + job.getCompanyId(), Company.class);
-            jobWithCompanyDto.setCompany(company);
-            jobWithCompanyDtos.add(jobWithCompanyDto);
-        }
-        return jobWithCompanyDtos;
+        JobWithCompanyDto jobWithCompanyDto = new JobWithCompanyDto();
+        jobWithCompanyDto.setJob(job);
+        Company company = restTemplate.getForObject("http://localhost:8082/company/" + job.getCompanyId(), Company.class);
+        jobWithCompanyDto.setCompany(company);
+        return jobWithCompanyDto;
     }
 
     @Override
