@@ -21,6 +21,6 @@ public class JobMapper {
         jobDto.setMinSalary(job.getMinSalary());
         jobDto.setCompany(company);
         jobDto.setReview(reviews);
-        return null;
+        return jobDto;
     }
 }
