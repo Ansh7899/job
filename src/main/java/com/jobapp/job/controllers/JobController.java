@@ -1,6 +1,6 @@
 package com.jobapp.job.controllers;
 
-import com.jobapp.job.dto.JobWithCompanyDto;
+import com.jobapp.job.dto.JobDto;
 import com.jobapp.job.model.Job;
 import com.jobapp.job.service.JobService;
 import org.springframework.http.HttpStatus;
@@ -20,16 +20,16 @@ public class JobController {
     }
 
     @GetMapping
-    public ResponseEntity<List<JobWithCompanyDto>> findAll(){
+    public ResponseEntity<List<JobDto>> findAll(){
         return new ResponseEntity<>(jobService.findAll()
                 , HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Job> findByJobId(@PathVariable Long id){
-        Job job = jobService.findJobById(id);
-        if(job != null)
-            return new ResponseEntity<>(job, HttpStatus.OK);
+    public ResponseEntity<JobDto> findByJobId(@PathVariable Long id){
+        JobDto jobDto = jobService.findJobById(id);
+        if(jobDto != null)
+            return new ResponseEntity<>(jobDto, HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
